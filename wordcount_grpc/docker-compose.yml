@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  worker1:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: worker1
+    command: ["python", "worker/worker.py", "--port", "6001"]
+
+  worker2:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: worker2
+    command: ["python", "worker/worker.py", "--port", "6002"]
+
+  master:
+    build:
+      context: .
+      dockerfile: Dockerfile.master
+    container_name: master
+    depends_on:
+      - worker1
+      - worker2
+    environment:
+      # tell master to use the Docker service names instead of localhost
+      - WORKER_ADDRESSES=worker1:6001,worker2:6002

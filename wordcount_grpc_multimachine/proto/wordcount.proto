@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package wordcount;
+
+// Service definition
+service WordCount {
+  // Sends a text chunk and gets local word counts
+  rpc CountWords (WordCountRequest) returns (WordCountReply) {}
+}
+
+// Request message containing a text chunk
+message WordCountRequest {
+  string text_chunk = 1;
+}
+
+// Reply message containing local word counts
+message WordCountReply {
+  map<string, int32> counts = 1;
+}

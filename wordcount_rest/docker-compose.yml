@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  worker1:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: worker1
+    command: ["uvicorn", "worker.worker:app", "--host", "0.0.0.0", "--port", "6001"]
+
+  worker2:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: worker2
+    command: ["uvicorn", "worker.worker:app", "--host", "0.0.0.0", "--port", "6002"]
+
+  master:
+    build:
+      context: .
+      dockerfile: Dockerfile.master
+    container_name: master
+    depends_on:
+      - worker1
+      - worker2
+    environment:
+      - WORKER_ADDRESSES=http://worker1:6001,http://worker2:6002

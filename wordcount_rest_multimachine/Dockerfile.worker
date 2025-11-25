@@ -1,0 +1,13 @@
+# Dockerfile.worker_rest
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy project files
+COPY . /app
+
+# Install runtime deps for REST worker
+RUN pip install --no-cache-dir fastapi uvicorn
+
+# Default: run FastAPI worker on port 6001 (override in compose for others)
+CMD ["uvicorn", "worker.worker:app", "--host", "0.0.0.0", "--port", "6001"]
